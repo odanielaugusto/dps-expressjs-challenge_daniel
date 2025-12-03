@@ -97,5 +97,5 @@ curl http://localhost:3000/api/tournaments/:id/leaderboard
 
 - [AI Usage Report](AI_USAGE.md): A transparency report detailing how AI tools were used to assist development.
 
-- [Challenge Instructions](README.md): The original requirements for this project.
+- [Challenge Instructions](CHALLENGE_INSTRUCTIONS.md): The original requirements for this project.
 
