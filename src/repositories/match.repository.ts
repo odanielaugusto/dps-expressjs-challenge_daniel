@@ -60,10 +60,9 @@ class MatchRepository {
 	 * @returns Match object or undefined if not found
 	 */
 	findById(id: string): Match | undefined {
-		const results = db.query(
-			`SELECT * FROM matches WHERE id = $id`,
-			{ id },
-		) as Match[];
+		const results = db.query(`SELECT * FROM matches WHERE id = $id`, {
+			id,
+		}) as Match[];
 
 		return results[0];
 	}
@@ -104,4 +103,3 @@ class MatchRepository {
 }
 
 export default new MatchRepository();
-

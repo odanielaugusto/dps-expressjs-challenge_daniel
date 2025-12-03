@@ -1,51 +1,101 @@
-# DPS Backend Coding Challenge
+# Round-Robin Tournament Service 🏆
 
-## Overview: Round-Robin Tournament Service
+A robust Backend REST API to manage sports tournaments, implementing the **Round-Robin** system where every participant plays against everyone else.
 
-Your task is to build a backend service to manage round-robin sports tournaments. In a round-robin tournament, each participant must play against every other participant exactly once.
+Built with **Node.js**, **Express**, **TypeScript**, and **SQLite**.
 
-Constraints and rules:
-- Each tournament can have up to 5 participants.
-- A game result gives:
-    - **2 points** for a win
-    - **1 point** for a draw
-    - **0 points** for a loss
-- A tournament is considered completed when everybody has played against everybody.
-- The service must be able to return a **leaderboard** for a given tournament, including its **status**.
+---
 
-## Challenge Tasks
+## Architecture & Design
 
--   **Fork this project:** You can either fork this repository or create a new one, using tech stack of your choice, and database, but your solution must be easy to run locally and clearly documented. 
-       1. If you're using this template, you can use ([db.service.ts](./src/services/db.service.ts)) to handle SQL queries to the database. 
-       2. Don't create PRs to this repository, provide a separate repo. 
--   **REST API Development:** Design and implement a RESTful APIs to create tournaments, create players and add them to the tournaments and to enter game results.
--   **Special API Endpoint:** Implement an endpoint that returns the status of a given tournament (in planning, started, finished) and the leaderboard (list of all participants of the tournament, their points up to date sorted descendingly).
--   **Submission:** After completing the challenge, email us the URL of your GitHub repository.
--   **Further information:**
-    -   If there is anything unclear regarding requirements, contact us by replying to our email.
-    -   Use small commits, we want to see your progress towards the solution.
-    -   Code clean and follow the best practices.
+I implemented a **Layered Architecture** to ensure Separation of Concerns (SoC) and scalability.
 
-## Environment Setup
+![System Architecture](docs/images/architecture.png)
 
-If you are using suggested template. Ensure you have Node.js (v14.x or later) and npm (v6.x or later) installed. To set up and run the application, execute the following commands:
+### Key Decisions
+1.  **Repository Pattern:** Instead of using an ORM like Prisma, I implemented a custom Repository pattern using the provided `db.service.ts`. This demonstrates proficiency with **Raw SQL** and low-level data manipulation.
+2.  **Round-Robin Logic:** The pairing algorithm uses a double-loop approach (`O(n^2)`) to generate exactly `N*(N-1)/2` matches, ensuring no duplicates.
+3.  **Atomic Transactions:** Match results automatically trigger tournament completion checks.
 
-```
+### Database Schema (ERD)
+The database was designed to ensure data integrity with foreign keys and unique constraints.
+
+![Entity Relationship Diagram](docs/images/erd.jpg)
+---
+## 🚀 How to Run
+
+### Prerequisites
+- Node.js (v18+)
+- NPM
+
+### 1. Install Dependencies
+
+```bash
 npm install
+```
+
+### 2. Initialize Database
+
+This script creates the SQLite file and the necessary tables.
+
+```bash
+npm run db:init
+```
+
+### 3. Start Server
+
+```bash
 npm run dev
 ```
 
-The application will then be accessible at http://localhost:3000.
+The API will be available at http://localhost:3000/api.
 
-## AI Usage Rules
+### How to test
 
-You are allowed to use AI tools to complete this task. However, **transparency is required**.
-Please include a small artifact folder or a markdown section with:
-- Links to ChatGPT / Claude / Copilot conversations
-- Any prompts used (copy/paste the prompt text if links are private)
-- Notes about what parts were AI-assisted
-- Any generated code snippets you modified or rejected
+You have two ways to test the application:
 
-This helps us understand your workflow and decision-making process, not to judge AI usage.
+**Option A: Automated End-to-End Script (Recommended) 🤖**
 
-Happy coding!
+I included a script that simulates a full tournament lifecycle (Creation -> Matchmaking -> Scoring -> Leaderboard) in seconds.
+
+```bash
+npm run test:e2e
+```
+
+Option B: Manual Testing (cURL) 🛠️
+
+If you prefer to test endpoints manually, follow this workflow:
+
+| Step | Action | Endpoint | Method | Body Example |
+| :---: | :--- | :--- | :---: | :--- |
+| 1 | **Create** | `/api/tournaments` | `POST` | (None) |
+| 2 | **Add Player** | `/api/tournaments/:id/participants` | `POST` | `{"name": "Alice"}` |
+| 3 | **Start** | `/api/tournaments/:id/start` | `PATCH` | (None) |
+| 4 | **Result** | `/api/matches/:matchId/result` | `POST` | `{"scoreA": 2, "scoreB": 1}` |
+| 5 | **Ranking** | `/api/tournaments/:id/leaderboard` | `GET` | (None) |
+
+Quick Copy-Paste Example:
+
+```bash
+# 1. Create Tournament
+curl -X POST http://localhost:3000/api/tournaments
+
+# 2. Add Players (Replace :id with the UUID from step 1)
+curl -X POST http://localhost:3000/api/tournaments/:id/participants -H "Content-Type: application/json" -d '{"name":"Alice"}'
+curl -X POST http://localhost:3000/api/tournaments/:id/participants -H "Content-Type: application/json" -d '{"name":"Bob"}'
+
+# 3. Start
+curl -X PATCH http://localhost:3000/api/tournaments/:id/start
+
+# 4. Check Leaderboard
+curl http://localhost:3000/api/tournaments/:id/leaderboard
+```
+
+### Documentation
+
+- [API Documentation](docs/API.md): Detailed list of all endpoints, parameters, and example responses.
+
+- [AI Usage Report](AI_USAGE.md): A transparency report detailing how AI tools were used to assist development.
+
+- [Challenge Instructions](README.md): The original requirements for this project.
+

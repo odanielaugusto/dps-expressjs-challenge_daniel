@@ -1,4 +1,4 @@
- import { randomUUID } from 'crypto';
+import { randomUUID } from 'crypto';
 import db from '../services/db.service';
 import { Participant } from '../models/types';
 
@@ -75,4 +75,3 @@ class ParticipantRepository {
 }
 
 export default new ParticipantRepository();
-

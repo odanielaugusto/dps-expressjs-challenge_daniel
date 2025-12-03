@@ -23,7 +23,7 @@ app.use('/api', routes);
 
 // Start server
 app.listen(port, () => {
-	console.log(`🚀 Server ready on port ${port}`);
-	console.log(`📍 API available at http://localhost:${port}/api`);
-	console.log(`❤️  Health check: http://localhost:${port}/health`);
+	console.log(` Server ready on port ${port}`);
+	console.log(` API available at http://localhost:${port}/api`);
+	console.log(` Health check: http://localhost:${port}/health`);
 });

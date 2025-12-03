@@ -28,10 +28,9 @@ class PlayerRepository {
 	 * @returns Player object or undefined if not found
 	 */
 	findById(id: string): Player | undefined {
-		const results = db.query(
-			`SELECT * FROM players WHERE id = $id`,
-			{ id },
-		) as Player[];
+		const results = db.query(`SELECT * FROM players WHERE id = $id`, {
+			id,
+		}) as Player[];
 
 		return results[0];
 	}
@@ -50,14 +49,12 @@ class PlayerRepository {
 	 * @returns Player object or undefined if not found
 	 */
 	findByName(name: string): Player | undefined {
-		const results = db.query(
-			`SELECT * FROM players WHERE name = $name`,
-			{ name },
-		) as Player[];
+		const results = db.query(`SELECT * FROM players WHERE name = $name`, {
+			name,
+		}) as Player[];
 
 		return results[0];
 	}
 }
 
 export default new PlayerRepository();
-

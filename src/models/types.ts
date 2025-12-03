@@ -31,4 +31,3 @@ export interface Match {
 	score_b: number | null;
 	status: string;
 }
-

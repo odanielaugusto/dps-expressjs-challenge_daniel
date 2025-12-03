@@ -30,10 +30,9 @@ class TournamentRepository {
 	 * @returns Tournament object or undefined if not found
 	 */
 	findById(id: string): Tournament | undefined {
-		const results = db.query(
-			`SELECT * FROM tournaments WHERE id = $id`,
-			{ id },
-		) as Tournament[];
+		const results = db.query(`SELECT * FROM tournaments WHERE id = $id`, {
+			id,
+		}) as Tournament[];
 
 		return results[0];
 	}
@@ -63,4 +62,3 @@ class TournamentRepository {
 }
 
 export default new TournamentRepository();
-
